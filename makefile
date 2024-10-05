@@ -4,7 +4,9 @@ CFLAGS = -Wall -Wextra -g -std=c99 # flags de compilacao
 CC = gcc
 
 # gera o executável
-all: tp2.o racional.o
+all: tp2
+
+tp2: tp2.o racional.o
 	$(CC) -o tp2 tp2.o racional.o
 
 # compila racional.c
