@@ -139,12 +139,19 @@ void imprime_r (struct racional r) {
 }
 
 int compara_r (struct racional r1, struct racional r2) {
-  struct racional s_r1, s_r2;
+  struct racional sub_resultado;
 
-  s_r1 = simplifica_r(r1);
-  s_r2 = simplifica_r(r2);
+  if (!(valido_r(r1) && valido_r(r2)))
+    return -2;
 
-  return (r1.num == r2.num) && (r1.den == r2.den) ? (1) : (0);
+  if (!subtrai_r(r1, r2, &sub_resultado))
+    return -2;
+
+  if (sub_resultado.num > 0)
+    return 1;
+  else if (sub_resultado.num == 0)
+    return 0;
+  return -1;
 }
 
 int soma_r (struct racional r1, struct racional r2, struct racional *r3) {
@@ -154,8 +161,13 @@ int soma_r (struct racional r1, struct racional r2, struct racional *r3) {
   if (!(valido_r(r1) && valido_r(r2)))
     return 0;
 
+  if (r2.num == 0) {
+    *r3 = r1;
+    return 1;
+  }
+
   r3->den = mmc (r1.den, r2.den);
-  r3->num = (((r3->den/r1.den)* r1.num)+(r3->den/r2.num) * r2.num);
+  r3->num = (((r3->den/r1.den)* r1.num)+(r3->den/r2.den) * r2.num);
   *r3 = simplifica_r (*r3);
 
   return 1;
@@ -166,10 +178,15 @@ int subtrai_r (struct racional r1, struct racional r2, struct racional *r3) {
     return 0;
 
   if (!(valido_r(r1) && valido_r(r2)))
-    return 0;  
+    return 0;
+
+  if (r2.num == 0) {
+    *r3 = r1;
+    return 1;
+  }
 
   r3->den = mmc (r1.den, r2.den);
-  r3->num = ((r3->den/r1.den)* r1.num)-(r3->den/r2.num) * r2.num;
+  r3->num = ((r3->den/r1.den)* r1.num)-(r3->den/r2.den) * r2.num;
   *r3 = simplifica_r (*r3);
 
   return 1;
