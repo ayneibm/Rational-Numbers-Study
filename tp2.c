@@ -17,8 +17,10 @@ int main ()
 {
   srand(0);
 
-  // long v = aleat(10, 20);
-  // printf("%ld\n", v);
+  struct racional meu_r = cria_r(10, 5);
+  imprime_r(meu_r);
+  printf("\n");
 
+  printf("TEST PROGRAM HAS ENDED\n");
   return (0) ;
 }

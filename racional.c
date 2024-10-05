@@ -13,6 +13,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 /*
  * Implemente aqui as funcoes definidas no racionais.h; caso precise,
@@ -55,7 +56,12 @@ long mdc (long a, long b)
 /* mmc = (a * b) / mdc (a, b)        */
 long mmc (long a, long b)
 {
-  /* implemente aqui */
+  if (a == 0 || b == 0) {
+    perror("A e B devem ser diferentes de zero.\n");
+    exit(1);
+  }
+
+  return (a * b) / mdc (a, b);
 }
 
 /* Recebe um número racional e o simplifica.
@@ -65,7 +71,60 @@ long mmc (long a, long b)
  * Se r for inválido, devolve-o sem simplificar. */
 struct racional simplifica_r (struct racional r)
 {
-  /* implemente aqui */
+  struct racional novo_r;
+  long m, num_s, den_s, new_s;
+
+  if (!valido_r(r))
+    return r;
+
+  m = mdc(r.num, r.den);
+
+  novo_r.num = labs(r.num / m);
+  novo_r.den = labs(r.den / m);
+
+  num_s = r.num < 0 ? (-1) : (1);
+  den_s = r.den < 0 ? (-1) : (1);
+  new_s = num_s * den_s;
+
+  novo_r.num = new_s * novo_r.num;
+
+  return novo_r;
 }
 
 /* implemente as demais funções de racional.h aqui */
+
+struct racional cria_r (long numerador, long denominador) {
+  struct racional novo_r;
+  novo_r.num = numerador;
+  novo_r.den = denominador;
+
+  return simplifica_r(novo_r);
+}
+
+int valido_r (struct racional r) {
+  return r.den == 0 ? (0) : (1);
+}
+
+void imprime_r (struct racional r) {
+  if (!valido_r(r)) {
+    printf("Nan");
+    return;
+  }
+
+  if (!r.num) {
+    printf("0");
+    return;
+  }
+
+  if (r.num == r.den || -r.num == r.den) {
+    r.num < 0 ? (printf("-1")) : (printf("1"));
+    return;
+  }
+
+  if (r.den == 1) {
+    printf("%ld", r.num);
+    return;
+  }
+
+  printf("%ld/%ld", r.num, r.den);
+}
