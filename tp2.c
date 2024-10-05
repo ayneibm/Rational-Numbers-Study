@@ -17,7 +17,7 @@ int main ()
 {
   srand(0);
 
-  struct racional meu_r = cria_r(10, 5);
+  struct racional meu_r = sorteia_r(-100, 100);
   imprime_r(meu_r);
   printf("\n");
 

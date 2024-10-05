@@ -31,7 +31,7 @@ long aleat (long min, long max)
   }
 
   long nm = max - min;
-  return (rand() % nm) + min;
+  return (rand() % nm) + min + 1;
 }
 
 /* Máximo Divisor Comum entre a e b      */
@@ -105,6 +105,15 @@ int valido_r (struct racional r) {
   return r.den == 0 ? (0) : (1);
 }
 
+struct racional sorteia_r (long min, long max) {
+  long num, den;
+
+  num = aleat(min, max);
+  den = aleat(min, max);
+
+  return cria_r(num, den);
+}
+
 void imprime_r (struct racional r) {
   if (!valido_r(r)) {
     printf("Nan");
@@ -127,4 +136,68 @@ void imprime_r (struct racional r) {
   }
 
   printf("%ld/%ld", r.num, r.den);
+}
+
+int compara_r (struct racional r1, struct racional r2) {
+  struct racional s_r1, s_r2;
+
+  s_r1 = simplifica_r(r1);
+  s_r2 = simplifica_r(r2);
+
+  return (r1.num == r2.num) && (r1.den == r2.den) ? (1) : (0);
+}
+
+int soma_r (struct racional r1, struct racional r2, struct racional *r3) {
+  if (r3 == NULL)
+    return 0;
+
+  if (!(valido_r(r1) && valido_r(r2)))
+    return 0;
+
+  r3->den = mmc (r1.den, r2.den);
+  r3->num = (((r3->den/r1.den)* r1.num)+(r3->den/r2.num) * r2.num);
+  *r3 = simplifica_r (*r3);
+
+  return 1;
+}
+
+int subtrai_r (struct racional r1, struct racional r2, struct racional *r3) {
+  if (r3 == NULL)
+    return 0;
+
+  if (!(valido_r(r1) && valido_r(r2)))
+    return 0;  
+
+  r3->den = mmc (r1.den, r2.den);
+  r3->num = ((r3->den/r1.den)* r1.num)-(r3->den/r2.num) * r2.num;
+  *r3 = simplifica_r (*r3);
+
+  return 1;
+}
+
+int multiplica_r (struct racional r1, struct racional r2, struct racional *r3) {
+  if (r3 == NULL)
+    return 0;
+
+  if (!(valido_r(r1) && valido_r(r2)))
+    return 0;
+
+  r3->den = r1.den * r2.den;
+  r3->num = r1.num * r2.num;
+  *r3 = simplifica_r (*r3);
+  return 0;
+}
+
+int divide_r (struct racional r1, struct racional r2, struct racional *r3) {
+  if (r3 == NULL)
+    return 0;
+
+  if (!(valido_r(r1) && valido_r(r2)))
+    return 0;
+
+  r3->num = r1.num * r2.den;
+  r3->den = r2.num * r1.den;
+  *r3 = simplifica_r (*r3);
+
+  return 1;
 }
